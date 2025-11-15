@@ -636,30 +636,30 @@
                 <div class="stat-item">
                     <div class="stat-label">Total Properties</div>
                     <div class="stat-value" id="totalProperties">0</div>
-                </div>
+            </div>
                 <div class="stat-item">
                     <div class="stat-label">With Complete Info</div>
                     <div class="stat-value" id="completeProperties">0</div>
-                </div>
+        </div>
                 <div class="stat-item">
                     <div class="stat-label">Favorites</div>
                     <div class="stat-value" id="favoriteCount">0</div>
-                </div>
             </div>
+        </div>
 
             <div class="reference-locations">
                 <div class="location-card">
                     <h3>Reference Locations</h3>
                     <p><strong>Work:</strong> Target, Culver City (Jefferson)</p>
                     <p><strong>Parents' Home:</strong> 2802 W Carson St, Torrance, CA</p>
+                    </div>
                 </div>
-            </div>
-
+                
             <div class="property-listings" id="propertyListings"></div>
 
-            <div class="ranking-section">
+        <div class="ranking-section">
                 <h2>Property Rankings</h2>
-                <div id="rankings"></div>
+            <div id="rankings"></div>
             </div>
         </div>
     </div>
@@ -820,6 +820,28 @@
                 appointment: null,
                 visited: false,
                 favorite: false
+            },
+            {
+                id: 8,
+                name: "15006 Inglewood Ave, Lawndale",
+                address: "15006 Inglewood Ave, Lawndale, CA 90260",
+                link: "https://www.zillow.com/apartments/lawndale-ca/parkwest-apartments/CkBDMx/",
+                rent: 2400,
+                beds: 1.5,
+                baths: 1,
+                parking: "Gated garage + covered parking",
+                workDistance: 10,
+                workTime: 14,
+                parentsDistance: 9,
+                parentsTime: 15,
+                teslaDistance: 2.5,
+                teslaTime: 7,
+                teslaLocation: "Hawthorne Supercharger",
+                notes: "Controlled access entry, bright courtyard, modern laminate flooring, laundry on-site, no pets allowed, walkable neighborhood, near supermarkets, well-maintained community",
+                rating: 0,
+                appointment: null,
+                visited: false,
+                favorite: false
             }
         ];
 
@@ -828,11 +850,6 @@
             const existingMap = new Map();
             existing.forEach(prop => {
                 existingMap.set(prop.id, prop);
-            });
-
-            const defaultsMap = new Map();
-            defaults.forEach(prop => {
-                defaultsMap.set(prop.id, prop);
             });
 
             const merged = [...existing];
@@ -943,57 +960,57 @@
                         </div>
                     </div>
                     <div class="property-header-right">
-                        <div class="property-rent">${rent}</div>
+                    <div class="property-rent">${rent}</div>
                         <div class="expand-icon">▼</div>
-                    </div>
+                </div>
                 </div>
                 <div class="property-card-content">
                     <div class="property-content-inner">
                         <div class="property-section">
                             <div class="section-title">Property Details</div>
                             <div class="property-details-grid">
-                                <div class="detail-item">
+                    <div class="detail-item">
                                     <strong>Bedrooms</strong>
-                                    <span>${beds}</span>
-                                </div>
-                                <div class="detail-item">
+                        <span>${beds}</span>
+                    </div>
+                    <div class="detail-item">
                                     <strong>Bathrooms</strong>
-                                    <span>${baths}</span>
-                                </div>
-                                <div class="detail-item">
+                        <span>${baths}</span>
+                    </div>
+                    <div class="detail-item">
                                     <strong>Parking</strong>
                                     <span style="font-size: 0.95rem;">${parking}</span>
                                 </div>
-                            </div>
-                        </div>
-                        
+                    </div>
+                </div>
+                
                         ${(property.workDistance !== null || property.parentsDistance !== null || property.teslaDistance !== null) ? `
                         <div class="property-section">
                             <div class="section-title">Distances</div>
-                            <div class="distance-grid">
-                                ${property.workDistance !== null ? `
-                                <div class="distance-item">
+                <div class="distance-grid">
+                    ${property.workDistance !== null ? `
+                    <div class="distance-item">
                                     <div class="label">Work</div>
                                     <div class="value">${property.workDistance} mi</div>
                                     <div class="label" style="font-size: 0.65rem; margin-top: 0.5rem; font-weight: 300; text-transform: none; letter-spacing: 0;">${property.workTime} min</div>
-                                </div>
-                                ` : ''}
-                                ${property.parentsDistance !== null ? `
-                                <div class="distance-item">
+                    </div>
+                    ` : ''}
+                    ${property.parentsDistance !== null ? `
+                    <div class="distance-item">
                                     <div class="label">Parents</div>
                                     <div class="value">${property.parentsDistance} mi</div>
                                     <div class="label" style="font-size: 0.65rem; margin-top: 0.5rem; font-weight: 300; text-transform: none; letter-spacing: 0;">${property.parentsTime} min</div>
-                                </div>
-                                ` : ''}
-                                ${property.teslaDistance !== null ? `
-                                <div class="distance-item">
+                    </div>
+                    ` : ''}
+                    ${property.teslaDistance !== null ? `
+                    <div class="distance-item">
                                     <div class="label">Tesla Charger</div>
                                     <div class="value">${property.teslaDistance} mi</div>
                                     <div class="label" style="font-size: 0.65rem; margin-top: 0.5rem; font-weight: 300; text-transform: none; letter-spacing: 0;">${property.teslaTime} min</div>
                                     <div class="label" style="font-size: 0.65rem; margin-top: 0.25rem; font-weight: 300; text-transform: none; letter-spacing: 0; color: var(--text-secondary);">${property.teslaLocation}</div>
-                                </div>
-                                ` : ''}
-                            </div>
+                    </div>
+                    ` : ''}
+                </div>
                         </div>
                         ` : ''}
                         
@@ -1006,42 +1023,42 @@
                         
                         <div class="property-section">
                             <div class="section-title">Rating</div>
-                            <div class="rating-controls">
-                                <input type="range" min="0" max="10" value="${property.rating}" step="0.5" 
-                                       class="rating-slider" 
-                                       oninput="updateRating(${property.id}, this.value)">
-                                <span class="rating-value">${property.rating}/10</span>
-                            </div>
-                        </div>
-                        
+                    <div class="rating-controls">
+                        <input type="range" min="0" max="10" value="${property.rating}" step="0.5" 
+                               class="rating-slider" 
+                               oninput="updateRating(${property.id}, this.value)">
+                        <span class="rating-value">${property.rating}/10</span>
+                    </div>
+                </div>
+                
                         <div class="property-section">
                             <div class="section-title">Schedule a Visit</div>
-                            <div class="appointment-controls">
-                                <input type="date" id="appt-date-${property.id}" 
-                                       value="${property.appointment ? property.appointment.date : ''}">
-                                <input type="time" id="appt-time-${property.id}" 
-                                       value="${property.appointment ? property.appointment.time : ''}">
+                    <div class="appointment-controls">
+                        <input type="date" id="appt-date-${property.id}" 
+                               value="${property.appointment ? property.appointment.date : ''}">
+                        <input type="time" id="appt-time-${property.id}" 
+                               value="${property.appointment ? property.appointment.time : ''}">
                                 <button type="button" class="btn btn-small" onclick="saveAppointment(${property.id})">Save</button>
                                 <label class="checkbox-label">
-                                    <input type="checkbox" id="visited-${property.id}" 
-                                           ${property.visited ? 'checked' : ''} 
-                                           onchange="toggleVisited(${property.id}, this.checked)">
+                            <input type="checkbox" id="visited-${property.id}" 
+                                   ${property.visited ? 'checked' : ''} 
+                                   onchange="toggleVisited(${property.id}, this.checked)">
                                     Visited
-                                </label>
-                            </div>
-                            ${property.appointment ? `
-                            <div class="appointment-display">
+                        </label>
+                    </div>
+                    ${property.appointment ? `
+                    <div class="appointment-display">
                                 Next Visit: ${property.appointment.date} at ${property.appointment.time}
-                                ${property.visited ? '<span class="visit-badge">✓ Visited</span>' : ''}
+                        ${property.visited ? '<span class="visit-badge">✓ Visited</span>' : ''}
                                 ${property.favorite ? '<span class="favorite-badge">⭐ Favorite</span>' : ''}
                             </div>
                             ` : property.favorite ? `
                             <div class="appointment-display">
                                 <span class="favorite-badge">⭐ Favorite</span>
-                            </div>
-                            ` : ''}
-                        </div>
-                        
+                    </div>
+                    ` : ''}
+                </div>
+                
                         <div class="property-section">
                             <div class="section-title">Actions</div>
                             <button type="button" class="favorite-button ${property.favorite ? 'active' : ''}" onclick="toggleFavorite(${property.id}, event)">
@@ -1051,7 +1068,7 @@
                                 Delete Property
                             </button>
                         </div>
-                    </div>
+                        </div>
                 </div>
             `;
             
