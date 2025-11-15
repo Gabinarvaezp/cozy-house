@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cozy House - Property Search</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-card: #111111;
+            --bg-hover: #1a1a1a;
+            --primary: #ffffff;
+            --primary-hover: #f5f5f5;
+            --accent: #ffffff;
+            --text-primary: #ffffff;
+            --text-secondary: #999999;
+            --text-muted: #666666;
+            --border: #1a1a1a;
+            --border-light: #2a2a2a;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --danger: #ef4444;
+            --favorite: #fbbf24;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 0;
+            line-height: 1.6;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        header {
+            background: transparent;
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 2rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        header h1 {
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: var(--text-primary);
+            text-align: center;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: center;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .main-content {
+            padding: 3rem 2rem;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .reference-locations {
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .location-card h3 {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .location-card p {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin: 0.5rem 0;
+            font-weight: 300;
+        }
+
+        .property-listings {
+            margin-bottom: 4rem;
+        }
+
+        .property-card {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 0;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .property-card.favorite {
+            border-color: var(--favorite);
+            border-width: 2px;
+        }
+
+        .property-card.expanded {
+            border-color: var(--border-light);
+        }
+
+        .property-card.favorite.expanded {
+            border-color: var(--favorite);
+        }
+
+        .property-card-header {
+            padding: 2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .property-card-header:hover {
+            background: var(--bg-hover);
+        }
+
+        .property-header-left {
+            flex: 1;
+        }
+
+        .property-name {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            letter-spacing: -0.02em;
+            line-height: 1.4;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .property-name:hover {
+            color: var(--text-secondary);
+        }
+
+        .favorite-star {
+            display: inline-block;
+            margin-left: 0.5rem;
+            font-size: 1.2rem;
+            color: var(--favorite);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .favorite-star:hover {
+            transform: scale(1.2);
+        }
+
+        .property-address {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            margin-bottom: 0.75rem;
+        }
+
+        .property-quick-info {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .quick-info-item {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .quick-info-item strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .property-header-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .property-rent {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            white-space: nowrap;
+            letter-spacing: -0.02em;
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            transition: transform 0.3s ease;
+        }
+
+        .property-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .property-card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .property-card.expanded .property-card-content {
+            max-height: 5000px;
+        }
+
+        .property-content-inner {
+            padding: 0 2rem 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 0;
+        }
+
+        .property-section {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .property-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .property-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+        }
+
+        .detail-item {
+            text-align: left;
+        }
+
+        .detail-item strong {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 500;
+        }
+
+        .detail-item span {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .distance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 2rem;
+        }
+
+        .distance-item {
+            text-align: left;
+        }
+
+        .distance-item .label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 500;
+        }
+
+        .distance-item .value {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .notes-display {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        .rating-controls {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .rating-slider {
+            flex: 1;
+            height: 2px;
+            border-radius: 0;
+            outline: none;
+            -webkit-appearance: none;
+            background: var(--border-light);
+        }
+
+        .rating-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            cursor: pointer;
+            border: none;
+        }
+
+        .rating-value {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            min-width: 60px;
+            text-align: right;
+            letter-spacing: -0.01em;
+        }
+
+        .appointment-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .appointment-controls input {
+            width: 100%;
+            padding: 1rem 0;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 300;
+            font-family: inherit;
+        }
+
+        .appointment-controls input:focus {
+            outline: none;
+            border-bottom-color: var(--text-primary);
+        }
+
+        .appointment-display {
+            margin-top: 1.5rem;
+            padding: 1rem 0;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            font-weight: 300;
+            border-top: 1px solid var(--border);
+        }
+
+        .visit-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--text-primary);
+            border-radius: 0;
+            font-size: 0.65rem;
+            font-weight: 500;
+            margin-left: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .favorite-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: transparent;
+            color: var(--favorite);
+            border: 1px solid var(--favorite);
+            border-radius: 0;
+            font-size: 0.65rem;
+            font-weight: 500;
+            margin-left: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .delete-button {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-family: inherit;
+        }
+
+        .delete-button:hover {
+            background: var(--danger);
+            color: var(--text-primary);
+        }
+
+        .favorite-button {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            color: var(--favorite);
+            border: 1px solid var(--favorite);
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-family: inherit;
+            margin-right: 1rem;
+        }
+
+        .favorite-button:hover {
+            background: var(--favorite);
+            color: var(--bg-primary);
+        }
+
+        .favorite-button.active {
+            background: var(--favorite);
+            color: var(--bg-primary);
+        }
+
+        .ranking-section {
+            background: transparent;
+            border: none;
+            border-top: 1px solid var(--border);
+            padding: 3rem 0;
+            margin-bottom: 4rem;
+        }
+
+        .ranking-section h2 {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem 0;
+            margin-bottom: 0;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .ranking-item:hover {
+            border-bottom-color: var(--border-light);
+        }
+
+        .ranking-number {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            min-width: 60px;
+            text-align: left;
+            letter-spacing: -0.02em;
+        }
+
+        .ranking-details {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
+        }
+
+        .ranking-score {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+        }
+
+        @media (min-width: 768px) {
+            header {
+                padding: 2.5rem 3rem 2rem;
+            }
+
+            .main-content {
+                padding: 4rem 3rem;
+            }
+
+            .property-name {
+                font-size: 2rem;
+            }
+
+            .property-rent {
+                font-size: 2rem;
+            }
+
+            .appointment-controls {
+                flex-direction: row;
+                align-items: flex-end;
+            }
+
+            .appointment-controls button {
+                width: auto;
+                flex-shrink: 0;
+                margin-top: 0;
+            }
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--text-primary);
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin: 0;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            background: var(--primary);
+            color: var(--bg-primary);
+            border: 1px solid var(--primary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .btn-small {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cozy House</h1>
+            <p class="subtitle">Property Search</p>
+        </header>
+
+        <div class="main-content">
+            <div class="quick-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Total Properties</div>
+                    <div class="stat-value" id="totalProperties">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">With Complete Info</div>
+                    <div class="stat-value" id="completeProperties">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Favorites</div>
+                    <div class="stat-value" id="favoriteCount">0</div>
+                </div>
+            </div>
+
+            <div class="reference-locations">
+                <div class="location-card">
+                    <h3>Reference Locations</h3>
+                    <p><strong>Work:</strong> Target, Culver City (Jefferson)</p>
+                    <p><strong>Parents' Home:</strong> 2802 W Carson St, Torrance, CA</p>
+                </div>
+            </div>
+
+            <div class="property-listings" id="propertyListings"></div>
+
+            <div class="ranking-section">
+                <h2>Property Rankings</h2>
+                <div id="rankings"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default properties - these will be merged with existing data
+        const defaultProperties = [
+            {
+                id: 1,
+                name: "4512 W 153rd St, Lawndale",
+                address: "4512 W 153rd St, Lawndale, CA 90260",
+                link: "https://www.zillow.com/apartments/lawndale-ca/4512-153rd-street-apartments/ChVQs7/",
+                rent: 2450,
+                beds: 2,
+                baths: 1,
+                parking: "Garage parking",
+                workDistance: 11,
+                workTime: 15,
+                parentsDistance: 13,
+                parentsTime: 20,
+                teslaDistance: 2.2,
+                teslaTime: 7,
+                teslaLocation: "Hawthorne Supercharger",
+                notes: "Gated building; upgraded interior; laundry on-site; near supermarkets; modern finishes",
+                rating: 0,
+                appointment: null,
+                visited: false,
+                favorite: false
+            },
+            {
+                id: 2,
+                name: "5508 W 117th St, Inglewood",
+                address: "5508 W 117th St Unit 5508, Inglewood, CA 90304",
+                link: "https://www.apartments.com/5508-w-117th-st-inglewood-ca-unit-5508/099zd41/",
+                rent: 1900,
+                beds: 1,
+                baths: 1,
+                parking: "Street parking (2 permits Mon–Fri)",
+                workDistance: 6,
+                workTime: 10,
+                parentsDistance: 11.5,
+                parentsTime: 20,
+                teslaDistance: 3.8,
+                teslaTime: 10,
+                teslaLocation: "Nearest Supercharger",
+                notes: "Close to 405 & 105; no assigned parking; older building; laundry on-site; deposit ~$1,000",
+                rating: 0,
+                appointment: null,
+                visited: false,
+                favorite: false
+            },
+            {
+                id: 3,
+                name: "716 Indiana Court, El Segundo",
+                address: "716 Indiana Court, El Segundo, CA 90245",
+                link: "https://www.zillow.com/apartments/el-segundo-ca/716-indiana-court/CgHnzw/",
+                rent: 2712,
+                beds: 1.5,
+                baths: 1.5,
+                parking: "Assigned parking",
+                workDistance: 8,
+                workTime: 14,
+                parentsDistance: 9.5,
+                parentsTime: 16.5,
+                teslaDistance: 2.9,
+                teslaTime: 8,
+                teslaLocation: "Nearest Supercharger",
+                notes: "Best amenities; renovated community; gym; pool; green areas; laundry in-unit or on-site",
+                rating: 0,
+                appointment: null,
+                visited: false,
+                favorite: false
+            },
+            {
+                id: 4,
+                name: "11819 Eucalyptus Ave, Hawthorne",
+                address: "11819 Eucalyptus Ave, Hawthorne, CA 90250",
+                link: "https://www.zillow.com/apartments/hawthorne-ca/11819-eucalyptus-ave./9MP2WB/",
+                rent: 2222,
+                beds: 1.5,
+                baths: 1.25,
+                parking: "Reserved parking + guest parking; gated entry",
+                workDistance: 10,
+                workTime: 14,
+                parentsDistance: 12,
+                parentsTime: 18,
+                teslaDistance: 2,
+                teslaTime: 6,
+                teslaLocation: "Nearest Supercharger",
+                notes: "Gated access; remodeled interiors; laundry in-unit; close to markets; deposit ~$1,000–$1,500",
+                rating: 0,
+                appointment: null,
+                visited: false,
+                favorite: false
+            },
+            {
+                id: 5,
+                name: "15301 Prairie Ave, Lawndale",
+                address: "15301 Prairie Ave, Lawndale, CA 90260",
+                link: "https://www.forrent.com/es/ca/lawndale/15301-prairie-ave/6d74wft",
+                rent: 2195,
+                beds: 1,
+                baths: 1,
+                parking: "Assigned parking",
+                workDistance: 11,
+                workTime: 15,
+                parentsDistance: 13,
+                parentsTime: 20,
+                teslaDistance: 2.2,
+                teslaTime: 7,
+                teslaLocation: "Hawthorne Supercharger",
+                notes: "Gated entry; remodeled units; laundry on-site; walkable to stores; deposit ~$1,000–$1,500",
+                rating: 0,
+                appointment: null,
+                visited: false,
+                favorite: false
+            },
+            {
+                id: 6,
+                name: "2145 W 104th St, Los Angeles",
+                address: "2145 W 104th St, Los Angeles, CA 90047",
+                link: "https://www.forrent.com/es/ca/los-angeles/2145-w-104th-st/29fbrq8",
+                rent: 1850,
+                beds: 1,
+                baths: 1,
+                parking: "Street parking",
+                workDistance: 8,
+                workTime: 18,
+                parentsDistance: 10,
+                parentsTime: 21,
+                teslaDistance: 4.5,
+                teslaTime: 12,
+                teslaLocation: "Nearest Supercharger",
+                notes: "Older building; basic finishes; laundry on-site; residential area; deposit ~$1,000",
+                rating: 0,
+                appointment: null,
+                visited: false,
+                favorite: false
+            },
+            {
+                id: 7,
+                name: "Palm View Village, Hawthorne",
+                address: "13629 Kornblum Ave, Hawthorne, CA 90250",
+                link: "https://www.forrent.com/es/ca/hawthorne/palm-view-village-hawthorne/6yrbx9v",
+                rent: 2400,
+                beds: 1,
+                baths: 1,
+                parking: "Assigned parking + gated building",
+                workDistance: 10,
+                workTime: 15,
+                parentsDistance: 12,
+                parentsTime: 18,
+                teslaDistance: 2,
+                teslaTime: 6,
+                teslaLocation: "Nearest Supercharger",
+                notes: "Gated community; pool; gym; updated interiors; laundry on-site; close to shops; deposit ~$1,000–$1,500",
+                rating: 0,
+                appointment: null,
+                visited: false,
+                favorite: false
+            }
+        ];
+
+        // Smart merge: preserves existing user data and only adds new properties
+        function mergeProperties(existing, defaults) {
+            const existingMap = new Map();
+            existing.forEach(prop => {
+                existingMap.set(prop.id, prop);
+            });
+
+            const defaultsMap = new Map();
+            defaults.forEach(prop => {
+                defaultsMap.set(prop.id, prop);
+            });
+
+            const merged = [...existing];
+
+            // Add new default properties that don't exist in user's data
+            defaults.forEach(defaultProp => {
+                if (!existingMap.has(defaultProp.id)) {
+                    merged.push({ ...defaultProp });
+                } else {
+                    // Update existing property with any new fields from defaults (but keep user's data)
+                    const existingProp = existingMap.get(defaultProp.id);
+                    const updated = { ...defaultProp, ...existingProp };
+                    // Preserve user's custom data
+                    if (existingProp.rating !== undefined) updated.rating = existingProp.rating;
+                    if (existingProp.appointment) updated.appointment = existingProp.appointment;
+                    if (existingProp.visited !== undefined) updated.visited = existingProp.visited;
+                    if (existingProp.favorite !== undefined) updated.favorite = existingProp.favorite;
+                    if (existingProp.notes && existingProp.notes !== defaultProp.notes) updated.notes = existingProp.notes;
+                    
+                    const index = merged.findIndex(p => p.id === defaultProp.id);
+                    if (index !== -1) {
+                        merged[index] = updated;
+                    }
+                }
+            });
+
+            return merged;
+        }
+
+        let allProperties = [];
+
+        function initializeProperties() {
+            const saved = localStorage.getItem('cozyHouseProperties');
+            if (saved) {
+                try {
+                    const savedProperties = JSON.parse(saved);
+                    allProperties = mergeProperties(savedProperties, defaultProperties);
+                } catch (e) {
+                    // If saved data is corrupted, use defaults
+                    allProperties = defaultProperties;
+                }
+            } else {
+                allProperties = defaultProperties;
+            }
+            saveProperties();
+        }
+
+        function saveProperties() {
+            localStorage.setItem('cozyHouseProperties', JSON.stringify(allProperties));
+        }
+
+        function updateStats() {
+            const total = allProperties.length;
+            const complete = allProperties.filter(p => p.rent && p.beds && p.baths && p.workDistance !== null).length;
+            const favorites = allProperties.filter(p => p.favorite).length;
+            
+            document.getElementById('totalProperties').textContent = total;
+            document.getElementById('completeProperties').textContent = complete;
+            document.getElementById('favoriteCount').textContent = favorites;
+        }
+
+        function displayProperties() {
+            const container = document.getElementById('propertyListings');
+            container.innerHTML = '';
+            
+            // Sort: favorites first, then by score
+            const sortedProperties = [...allProperties].sort((a, b) => {
+                if (a.favorite && !b.favorite) return -1;
+                if (!a.favorite && b.favorite) return 1;
+                return calculateScore(b) - calculateScore(a);
+            });
+            
+            sortedProperties.forEach(property => {
+                const card = createPropertyCard(property);
+                container.appendChild(card);
+            });
+            
+            updateRankings();
+            updateStats();
+        }
+
+        function createPropertyCard(property) {
+            const card = document.createElement('div');
+            card.className = 'property-card';
+            if (property.favorite) {
+                card.classList.add('favorite');
+            }
+            card.id = `property-${property.id}`;
+            
+            const rent = property.rent ? `$${property.rent.toLocaleString()}/mo` : 'Price TBD';
+            const beds = property.beds !== null ? property.beds : '?';
+            const baths = property.baths !== null ? property.baths : '?';
+            const parking = property.parking || 'Unknown';
+            const favoriteStar = property.favorite ? '⭐' : '☆';
+            
+            card.innerHTML = `
+                <div class="property-card-header" onclick="togglePropertyCard(${property.id})">
+                    <div class="property-header-left">
+                        <a href="${property.link}" target="_blank" class="property-name" onclick="event.stopPropagation()">
+                            ${property.name}
+                            <span class="favorite-star" onclick="toggleFavorite(${property.id}, event)" title="${property.favorite ? 'Remove from favorites' : 'Add to favorites'}">${favoriteStar}</span>
+                        </a>
+                        <div class="property-address">${property.address}</div>
+                        <div class="property-quick-info">
+                            <div class="quick-info-item"><strong>Bed:</strong> ${beds}</div>
+                            <div class="quick-info-item"><strong>Bath:</strong> ${baths}</div>
+                            <div class="quick-info-item"><strong>Parking:</strong> ${parking}</div>
+                        </div>
+                    </div>
+                    <div class="property-header-right">
+                        <div class="property-rent">${rent}</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                </div>
+                <div class="property-card-content">
+                    <div class="property-content-inner">
+                        <div class="property-section">
+                            <div class="section-title">Property Details</div>
+                            <div class="property-details-grid">
+                                <div class="detail-item">
+                                    <strong>Bedrooms</strong>
+                                    <span>${beds}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Bathrooms</strong>
+                                    <span>${baths}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Parking</strong>
+                                    <span style="font-size: 0.95rem;">${parking}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${(property.workDistance !== null || property.parentsDistance !== null || property.teslaDistance !== null) ? `
+                        <div class="property-section">
+                            <div class="section-title">Distances</div>
+                            <div class="distance-grid">
+                                ${property.workDistance !== null ? `
+                                <div class="distance-item">
+                                    <div class="label">Work</div>
+                                    <div class="value">${property.workDistance} mi</div>
+                                    <div class="label" style="font-size: 0.65rem; margin-top: 0.5rem; font-weight: 300; text-transform: none; letter-spacing: 0;">${property.workTime} min</div>
+                                </div>
+                                ` : ''}
+                                ${property.parentsDistance !== null ? `
+                                <div class="distance-item">
+                                    <div class="label">Parents</div>
+                                    <div class="value">${property.parentsDistance} mi</div>
+                                    <div class="label" style="font-size: 0.65rem; margin-top: 0.5rem; font-weight: 300; text-transform: none; letter-spacing: 0;">${property.parentsTime} min</div>
+                                </div>
+                                ` : ''}
+                                ${property.teslaDistance !== null ? `
+                                <div class="distance-item">
+                                    <div class="label">Tesla Charger</div>
+                                    <div class="value">${property.teslaDistance} mi</div>
+                                    <div class="label" style="font-size: 0.65rem; margin-top: 0.5rem; font-weight: 300; text-transform: none; letter-spacing: 0;">${property.teslaTime} min</div>
+                                    <div class="label" style="font-size: 0.65rem; margin-top: 0.25rem; font-weight: 300; text-transform: none; letter-spacing: 0; color: var(--text-secondary);">${property.teslaLocation}</div>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        ${property.notes ? `
+                        <div class="property-section">
+                            <div class="section-title">Notes</div>
+                            <div class="notes-display">${property.notes}</div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="property-section">
+                            <div class="section-title">Rating</div>
+                            <div class="rating-controls">
+                                <input type="range" min="0" max="10" value="${property.rating}" step="0.5" 
+                                       class="rating-slider" 
+                                       oninput="updateRating(${property.id}, this.value)">
+                                <span class="rating-value">${property.rating}/10</span>
+                            </div>
+                        </div>
+                        
+                        <div class="property-section">
+                            <div class="section-title">Schedule a Visit</div>
+                            <div class="appointment-controls">
+                                <input type="date" id="appt-date-${property.id}" 
+                                       value="${property.appointment ? property.appointment.date : ''}">
+                                <input type="time" id="appt-time-${property.id}" 
+                                       value="${property.appointment ? property.appointment.time : ''}">
+                                <button type="button" class="btn btn-small" onclick="saveAppointment(${property.id})">Save</button>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="visited-${property.id}" 
+                                           ${property.visited ? 'checked' : ''} 
+                                           onchange="toggleVisited(${property.id}, this.checked)">
+                                    Visited
+                                </label>
+                            </div>
+                            ${property.appointment ? `
+                            <div class="appointment-display">
+                                Next Visit: ${property.appointment.date} at ${property.appointment.time}
+                                ${property.visited ? '<span class="visit-badge">✓ Visited</span>' : ''}
+                                ${property.favorite ? '<span class="favorite-badge">⭐ Favorite</span>' : ''}
+                            </div>
+                            ` : property.favorite ? `
+                            <div class="appointment-display">
+                                <span class="favorite-badge">⭐ Favorite</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="property-section">
+                            <div class="section-title">Actions</div>
+                            <button type="button" class="favorite-button ${property.favorite ? 'active' : ''}" onclick="toggleFavorite(${property.id}, event)">
+                                ${property.favorite ? '⭐ Remove from Favorites' : '☆ Add to Favorites'}
+                            </button>
+                            <button type="button" class="delete-button" onclick="deleteProperty(${property.id}, event)">
+                                Delete Property
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function toggleFavorite(propertyId, event) {
+            if (event) event.stopPropagation();
+            
+            const property = allProperties.find(p => p.id === propertyId);
+            if (property) {
+                property.favorite = !property.favorite;
+                saveProperties();
+                displayProperties();
+            }
+        }
+
+        function deleteProperty(propertyId, event) {
+            if (event) event.stopPropagation();
+            
+            if (confirm('Are you sure you want to delete this property? This action cannot be undone.')) {
+                allProperties = allProperties.filter(p => p.id !== propertyId);
+                saveProperties();
+                displayProperties();
+            }
+        }
+
+        function togglePropertyCard(propertyId) {
+            const card = document.getElementById(`property-${propertyId}`);
+            card.classList.toggle('expanded');
+        }
+
+        function updateRating(propertyId, rating) {
+            const property = allProperties.find(p => p.id === propertyId);
+            if (property) {
+                property.rating = parseFloat(rating);
+                saveProperties();
+                updateRankings();
+                const ratingValueEl = document.querySelector(`#property-${propertyId} .rating-value`);
+                if (ratingValueEl) {
+                    ratingValueEl.textContent = `${rating}/10`;
+                }
+            }
+        }
+
+        function saveAppointment(propertyId) {
+            const property = allProperties.find(p => p.id === propertyId);
+            if (property) {
+                const date = document.getElementById(`appt-date-${propertyId}`).value;
+                const time = document.getElementById(`appt-time-${propertyId}`).value;
+                
+                if (date && time) {
+                    property.appointment = { date, time };
+                    saveProperties();
+                    displayProperties();
+                } else {
+                    alert('Please select both date and time');
+                }
+            }
+        }
+
+        function toggleVisited(propertyId, visited) {
+            const property = allProperties.find(p => p.id === propertyId);
+            if (property) {
+                property.visited = visited;
+                saveProperties();
+                updateRankings();
+                displayProperties();
+            }
+        }
+
+        function calculateScore(property) {
+            let score = 0;
+            score += (property.rating / 10) * 40;
+            
+            if (property.favorite) score += 10;
+            
+            if (property.workDistance !== null) {
+                if (property.workDistance <= 5) score += 25;
+                else if (property.workDistance <= 8) score += 20;
+                else if (property.workDistance <= 12) score += 15;
+                else score += 10;
+            }
+            
+            if (property.parentsDistance !== null) {
+                if (property.parentsDistance <= 10) score += 15;
+                else if (property.parentsDistance <= 15) score += 10;
+                else score += 5;
+            }
+            
+            if (property.teslaDistance !== null && property.teslaDistance <= 3) {
+                score += 10;
+            } else if (property.teslaDistance !== null) {
+                score += 5;
+            }
+            
+            if (property.visited) score += 5;
+            if (property.appointment) score += 5;
+            
+            return Math.round(score * 10) / 10;
+        }
+
+        function updateRankings() {
+            const rankingsContainer = document.getElementById('rankings');
+            rankingsContainer.innerHTML = '';
+            
+            const rankedProperties = allProperties.map(property => ({
+                ...property,
+                score: calculateScore(property)
+            })).sort((a, b) => b.score - a.score);
+            
+            rankedProperties.forEach((property, index) => {
+                const rankingItem = document.createElement('div');
+                rankingItem.className = 'ranking-item';
+                rankingItem.onclick = () => {
+                    const card = document.getElementById(`property-${property.id}`);
+                    if (card) {
+                        card.classList.add('expanded');
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                };
+                
+                const visitBadge = property.visited ? '<span class="visit-badge">✓</span>' : '';
+                const appointmentBadge = property.appointment ? `<span class="visit-badge" style="background: transparent; border-color: var(--text-secondary); color: var(--text-secondary);">📅</span>` : '';
+                const favoriteBadge = property.favorite ? '<span class="favorite-badge">⭐</span>' : '';
+                
+                rankingItem.innerHTML = `
+                    <div class="ranking-number">#${index + 1}</div>
+                    <div class="ranking-details">
+                        <div class="ranking-name">${property.name} ${favoriteBadge} ${visitBadge} ${appointmentBadge}</div>
+                        <div class="ranking-score">Score: ${property.score}/100</div>
+                    </div>
+                `;
+                
+                rankingsContainer.appendChild(rankingItem);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeProperties();
+            displayProperties();
+        });
+    </script>
+</body>
+</html>
